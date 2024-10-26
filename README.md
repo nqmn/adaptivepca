@@ -13,7 +13,7 @@ AdaptivePCA is a Python package designed for high-performance Principal Componen
 
 Clone this repository and install the package using `pip`:
 ```bash
-git clone https://github.com/yourusername/adaptivepca.git
+git clone https://github.com/nqmn/adaptivepca.git
 cd adaptivepca
 pip install .
 ```
