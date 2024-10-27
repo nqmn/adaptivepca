@@ -1,14 +1,14 @@
 
 # AdaptivePCA
 
-AdaptivePCA is a Python library introducing a novel approach to optimize Principal Component Analysis (PCA) for large datasets through an adaptive mechanism. By intelligently selecting the most suitable scaling method—choosing between StandardScaler and MinMaxScaler—and combining it with PCA, AdaptivePCA innovatively preserves the most significant information while reducing dimensionality. With a unique auto-stop feature that halts component selection upon reaching the specified variance threshold, AdaptivePCA ensures computational efficiency. This adaptive selection strategy enables efficient identification of the optimal principal components, positioning AdaptivePCA as a unique tool to enhance machine learning model performance and streamline data visualization tasks.
+AdaptivePCA is a Python library offering a novel approach to optimize Principal Component Analysis (PCA) for large datasets through an adaptive mechanism with minimal computational costs. It intelligently select the most suitable scaling method—choosing between StandardScaler and MinMaxScaler—and combining it with PCA, to innovatively preserves the most significant information while reducing dimensionality. With a unique early stop feature that halts component selection upon reaching the specified variance threshold, AdaptivePCA ensures computational efficiency. This adaptive selection strategy enables efficient identification of the optimal principal components, positioning AdaptivePCA as a unique tool to enhance machine learning model performance and streamline data preprocessing and visualization tasks.
 
 ## Features
 - **Adaptive Scaling Selection**: Dynamically selects between StandardScaler and MinMaxScaler to identify the most effective scaling method, optimizing information retention during dimensionality reduction.
 - **Automatic Component Optimization**: Automatically adjusts the number of principal components to achieve a specified variance threshold, preserving maximum data variance with minimal components.
 - **Efficient Parallel Processing**: Leverages parallel computation to accelerate scaling and component evaluation, enhancing performance on large datasets.
 - **Early Stop for Efficiency**: Stops further component evaluation once the specified variance threshold is reached, making the process computationally efficient.
-- **Seamless Integration**: Easily integrates into data science workflows, enhancing compatibility with machine learning pipelines and data visualization tasks.
+- **Seamless Integration**: Easily integrates into data science workflows, enhancing compatibility with machine learning pipelines and data preprocessing and visualization tasks.
 
 ## Installation
 
