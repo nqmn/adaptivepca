@@ -7,7 +7,7 @@ AdaptivePCA is a Python library introducing a novel approach to optimize Princip
 - **Adaptive Scaling Selection**: Dynamically selects between StandardScaler and MinMaxScaler to identify the most effective scaling method, optimizing information retention during dimensionality reduction.
 - **Automatic Component Optimization**: Automatically adjusts the number of principal components to achieve a specified variance threshold, preserving maximum data variance with minimal components.
 - **Efficient Parallel Processing**: Leverages parallel computation to accelerate scaling and component evaluation, enhancing performance on large datasets.
-- **Auto-Stop for Efficiency**: Stops further component evaluation once the specified variance threshold is reached, making the process computationally efficient.
+- **Early Stop for Efficiency**: Stops further component evaluation once the specified variance threshold is reached, making the process computationally efficient.
 - **Seamless Integration**: Easily integrates into data science workflows, enhancing compatibility with machine learning pipelines and data visualization tasks.
 
 ## Installation
@@ -37,7 +37,7 @@ y = data['Label']  # Target variable (Optional)
 
 # Initialize and fit AdaptivePCA
 # Make sure to use cleaned dataset. Eg. remove missing, etc.
-adaptive_pca = AdaptivePCA(variance_threshold=0.95, max_components=50, scaler_test=True)
+adaptive_pca = AdaptivePCA(variance_threshold=0.95, max_components=50, scaler_test=True, verbose=1)
 X_reduced = adaptive_pca.fit_transform(X)
 ```
 
@@ -66,6 +66,13 @@ Using Cohen's d and statistical tests, we observed significant effect sizes in p
   Added flexibility in scaling, which reduces runtime when scaling isn't required.
   Added on version 1.0.3
 
+- `verbose`: int, default=0  
+  Added parameter verbose to control the level of output:
+   `verbose=1`: Provides detailed output, displaying all component-wise explained variance scores for each scaler.
+   `verbose=0`: Suppresses intermediate output, showing only the final best configuration found after processing all scalers.
+  Useful for debugging or fine-tuning PCA settings, with a default value of 0.
+  Added on version 1.0.6
+
 ## Methods
 - `fit(X)`: Fits the AdaptivePCA model to the data `X`.
 - `transform(X)`: Transforms the data `X` using the fitted PCA model.
@@ -81,4 +88,5 @@ Contributions are welcome! Please open an issue or submit a pull request to disc
 This project makes use of the `scikit-learn`, `numpy`, and `pandas` libraries for data processing and machine learning.
 
 ## Version Update Log
-- `1.0.3` - Add flexibility in scaling, fix error handling when max_components exceeding the available number of features or samples.
+- `1.0.3` - Added flexibility in scaling, fix error handling when max_components exceeding the available number of features or samples.
+- `1.0.6` - Added Parameter verbose as an argument to __init__, with a default value of 0.

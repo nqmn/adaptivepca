@@ -1,6 +1,5 @@
-# Version 1.0.3 Pypi
-# This version with error handling
-# Modify the _evaluate_pca method so that n_components does not exceed the number of samples or features
+# AdaptivePCA version 1.0.6
+# Added Parameter verbose as an argument to __init__, with a default value of 0.
 
 import time
 from sklearn.decomposition import PCA
@@ -11,7 +10,7 @@ from typing import Optional, Dict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 class AdaptivePCA:
-    def __init__(self, variance_threshold: float = 0.95, max_components: int = 50, scaler_test: bool = True):
+    def __init__(self, variance_threshold: float = 0.95, max_components: int = 50, scaler_test: bool = True, verbose: int = 0):
         """
         Initialize the AdaptivePCA class.
         
@@ -19,10 +18,12 @@ class AdaptivePCA:
             variance_threshold: The explained variance threshold to select the best number of components.
             max_components: The maximum number of PCA components to consider.
             scaler_test: If True, evaluate StandardScaler and MinMaxScaler. If False, no scaling is applied.
+            verbose: Controls the level of output (0 = no detailed output, 1 = detailed output).
         """
         self.variance_threshold = variance_threshold
         self.max_components = max_components
         self.scaler_test = scaler_test
+        self.verbose = verbose  # New verbose parameter
         self.best_scaler = None
         self.best_n_components = None
         self.results = []  # Store results for each approach
@@ -35,7 +36,6 @@ class AdaptivePCA:
         return scaler.fit_transform(X) if scaler else X  # Apply scaler if provided
     
     def _evaluate_pca(self, X_scaled: np.ndarray, scaler_name: str) -> Optional[Dict[str, float]]:
-        # Ensure max_components does not exceed the minimum of samples or features in X_scaled
         max_components = min(self.max_components, X_scaled.shape[0], X_scaled.shape[1])
         pca = PCA(n_components=max_components)
         pca.fit(X_scaled)
@@ -48,7 +48,8 @@ class AdaptivePCA:
                 'Components': n_components,
                 'Score': explained_variance_score,
             })
-            self._log_test_result(scaler_name, n_components, explained_variance_score)
+            if self.verbose == 1:
+                self._log_test_result(scaler_name, n_components, explained_variance_score)
 
             if explained_variance_score >= self.variance_threshold:
                 return {
@@ -62,9 +63,10 @@ class AdaptivePCA:
         print(f"{scaler_name:<20}{n_components:<12}{score:<12.6f}")
 
     def fit(self, X: pd.DataFrame):
-        print("-" * 50)
-        print(f"{'Scaler':<20}{'Components':<12}{'Score':<12}")
-        print("-" * 50)
+        if self.verbose == 1:
+            print("-" * 50)
+            print(f"{'Scaler':<20}{'Components':<12}{'Score':<12}")
+            print("-" * 50)
 
         start_time = time.time()
         
@@ -89,15 +91,12 @@ class AdaptivePCA:
         return self._evaluate_pca(X_scaled, scaler_name)
 
     def _display_final_results(self, elapsed_time: float):
-        if self.best_scaler and self.best_n_components:
-            print("\nBest configuration found:")
-            print("-" * 70)
-            print(f"{'Best Scaler':<20}{'Optimal Components':<20}{'Best Score':<15}{'Time (s)':<15}")
-            print("-" * 70)
-            print(f"{self.best_scaler:<20}{self.best_n_components:<20}{self.best_explained_variance:<15.6f}{elapsed_time:.4f}")
-            print("-" * 70)
-        else:
-            print("\nNo configuration met the variance threshold.")
+        print("\nBest configuration found:")
+        print("-" * 70)
+        print(f"{'Best Scaler':<20}{'Optimal Components':<20}{'Best Score':<15}{'Time (s)':<15}")
+        print("-" * 70)
+        print(f"{self.best_scaler:<20}{self.best_n_components:<20}{self.best_explained_variance:<15.6f}{elapsed_time:.4f}")
+        print("-" * 70)
 
     def transform(self, X: pd.DataFrame) -> np.ndarray:
         if not self.best_n_components:
