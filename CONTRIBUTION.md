@@ -1,4 +1,3 @@
-```markdown
 # Key Mathematical Differences of AdaptivePCA
 
 Below are the key mathematical differences that make `AdaptivePCA` novel compared to traditional PCA methods, such as `GridSearch PCA`.
@@ -41,4 +40,3 @@ The novel aspects of **AdaptivePCA** are:
 - **Reduced computational complexity**, making it efficient for large-scale datasets.
 
 These mathematical innovations enable **AdaptivePCA** to balance efficiency and accuracy in dimensionality reduction, addressing computational overhead often seen in traditional methods like **GridSearch PCA**.
-```
