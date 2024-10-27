@@ -1,0 +1,11 @@
+LICENSE
+README.md
+pyproject.toml
+setup.py
+adaptivepca/__init__.py
+adaptivepca/adaptive_pca.py
+adaptivepca.egg-info/PKG-INFO
+adaptivepca.egg-info/SOURCES.txt
+adaptivepca.egg-info/dependency_links.txt
+adaptivepca.egg-info/requires.txt
+adaptivepca.egg-info/top_level.txt

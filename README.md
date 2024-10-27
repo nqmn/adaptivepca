@@ -37,7 +37,7 @@ y = data['Label']  # Target variable (Optional)
 
 # Initialize and fit AdaptivePCA
 # Make sure to use cleaned dataset. Eg. remove missing, etc.
-adaptive_pca = AdaptivePCA(variance_threshold=0.95, max_components=50)
+adaptive_pca = AdaptivePCA(variance_threshold=0.95, max_components=50, scaler_test=True)
 X_reduced = adaptive_pca.fit_transform(X)
 ```
 
@@ -60,7 +60,11 @@ Using Cohen's d and statistical tests, we observed significant effect sizes in p
   The cumulative variance explained threshold to determine the optimal number of components.
   
 - `max_components`: int, default=10  
-  The maximum number of components to consider. Set to 100 for comprehensive tuning.
+  The maximum number of components to consider. Set to 50 for comprehensive evaluation.
+
+- `scaler_test`: bool, default=True  
+  Added flexibility in scaling, which reduces runtime when scaling isn't required.
+  Added on version 1.0.3
 
 ## Methods
 - `fit(X)`: Fits the AdaptivePCA model to the data `X`.
@@ -75,3 +79,6 @@ Contributions are welcome! Please open an issue or submit a pull request to disc
 
 ## Acknowledgments
 This project makes use of the `scikit-learn`, `numpy`, and `pandas` libraries for data processing and machine learning.
+
+## Version Update Log
+- `1.0.3` - Add flexibility in scaling, fix error handling when max_components exceeding the available number of features or samples.
