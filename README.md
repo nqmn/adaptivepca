@@ -54,19 +54,20 @@ pip install .
 import pandas as pd
 from adaptivepca import AdaptivePCA
 
-# Load your data (example)
+# Load your data
 data = pd.read_csv("your_dataset.csv")
 X = data.drop(columns=['Label'])  # Features
 y = data['Label']  # Target variable (Optional)
 
 # Initialize and fit the model to determine the optimal scaler and PCA configuration
-adaptive_pca = AdaptivePCA(variance_threshold=0.95, max_components=50, varince_ratio=0.5, normality_ratio=5, verbose=1)
+adaptive_pca = AdaptivePCA(variance_threshold=0.95, max_components=50, variance_ratio=0.5, normality_ratio=5, verbose=1)
 adaptive_pca.fit(X)
 
 # Optional - Validate with a classifier with full and reduced dataset performance
-classifier = adaptive_pca.validate_with_classifier(X, y, classifier=DecisionTreeClassifier, test_size=0.2, cv=5)
+classifier = adaptive_pca.validate_with_classifier(X, y, classifier=DecisionTreeClassifier(), test_size=0.2, cv=5)
 
-# Optional - Run prediction with classifier, show output of confusion matrix, classification report, inference time, fpr, far, specificity, auc-roc, mcc
+# Optional - Run prediction with classifier, show output of confusion matrix, classification report,
+#  inference time, fpr, far, specificity, auc-roc, mcc
 adaptive_pca.predict_with_classifier(X, y)
 
 # Optional - View model configurations
