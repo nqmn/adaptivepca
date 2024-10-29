@@ -89,7 +89,7 @@ adaptive_pca.export_model("your_model_name.joblib", classifier)
 ## Methods
 - `fit(X)`: Fits the AdaptivePCA model to the data `X`.
 - `transform(X)`: Transforms the data `X` using the fitted PCA model.
-~~- `fit_transform(X)`: Fits and transforms the data in one step.~~
+- ~~`fit_transform(X)`: Fits and transforms the data in one step. (Optional)~~
 - `validate_with_classifier(X, y, classifier=None, cv=5, test_size=0.2)`: Tests model performance.
 - `predict_with_classifier(X, y)`: Makes predictions using trained classifier.
 - `export_model(model_name, classifier)`: Saves model to file.
