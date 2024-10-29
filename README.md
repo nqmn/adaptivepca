@@ -256,7 +256,7 @@ AdaptivePCA leverages parallel processing to evaluate scaling and PCA component 
 
 Both AdaptivePCA and traditional PCA achieve similar levels of explained variance, with AdaptivePCA dynamically selecting the number of components based on a defined variance threshold. Traditional PCA, on the other hand, requires manual parameter tuning, which can be time-consuming.
 
-### Performance on Different Dataset
+## Performance on Different Dataset (Full & Reduced Dataset)
 
 | Dataset | Score (Acc) | Time (s) | Gain (%) |
 |---------|-------------|----------|----------|
