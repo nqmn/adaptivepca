@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 setup(
     name="adaptivepca",
-    version="1.0.6",
-    description="Adaptive PCA with parallel scaling and dimensionality reduction",
+    version="1.1.0",
+    description="Adaptive feature reduction system that intelligently determines the optimal preprocessing and dimensionality reduction approach.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     author="Mohd Adil",
