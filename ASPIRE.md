@@ -21,6 +21,10 @@ ASPIRE employs a two-stage adaptive approach:
    - Adapts to dataset dimensions and characteristics
    - Provides comprehensive validation of the reduction effectiveness
 
+## Overall Design Pattern
+```bash
+Data → Preprocessing → Scaler Selection → PCA Optimization → Validation → Prediction
+```
 
 ## Key Advantages
 
@@ -29,7 +33,6 @@ ASPIRE employs a two-stage adaptive approach:
 - **Efficiency**: Optimizes computational resources while maintaining data integrity
 - **Validation**: Includes built-in performance comparison framework
 - **Transparency**: Provides detailed insights into selection decisions and performance metrics
-
 
 ## Installation
 
@@ -56,13 +59,25 @@ data = pd.read_csv("your_dataset.csv")
 X = data.drop(columns=['Label'])  # Features
 y = data['Label']  # Target variable (Optional)
 
-# Initialize and fit AdaptivePCA
-# Make sure to use cleaned dataset. Eg. remove missing, etc.
-adaptive_pca = AdaptivePCA(variance_threshold=0.95, max_components=50, scaler_test=True, verbose=1)
-X_reduced = adaptive_pca.fit_transform(X)
+# Initialize and fit the model to determine the optimal scaler and PCA configuration
+adaptive_pca = AdaptivePCA(variance_threshold=0.95, max_components=50, varince_ratio=0.5, normality_ratio=5, verbose=1)
+adaptive_pca.fit(X)
+
+# Optional - Validate with a classifier with full and reduced dataset performance
+classifier = adaptive_pca.validate_with_classifier(X, y, classifier=DecisionTreeClassifier, test_size=0.2, cv=5)
+
+# Optional - Run prediction with classifier, show output of confusion matrix, classification report, inference time, fpr, far, specificity, auc-roc, mcc
+adaptive_pca.predict_with_classifier(X, y)
+
+# Optional - View model configurations
+adaptive_pca.view_config()
+
+# Optional - Export the model in joblib format
+adaptive_pca.export_model("your_model_name.joblib", classifier)
+
 ```
 
-# AdaptivePCA Algorithm
+# Key Components
 
 ## Initialization Parameters
 - `variance_threshold`: Target explained variance (default: 0.95)
@@ -71,93 +86,121 @@ X_reduced = adaptive_pca.fit_transform(X)
 - `normality_ratio`: P-value threshold for Shapiro-Wilk test (default: 0.05)
 - `verbose`: Logging detail level (default: 0)
 
-## Main Algorithm Flow
+## Methods
+- `fit(X)`: Fits the AdaptivePCA model to the data `X`.
+- `transform(X)`: Transforms the data `X` using the fitted PCA model.
+~~- `fit_transform(X)`: Fits and transforms the data in one step.~~
+- `validate_with_classifier(X, y, classifier=None, cv=5, test_size=0.2)`: Tests model performance.
+- `predict_with_classifier(X, y)`: Makes predictions using trained classifier.
+- `export_model(model_name, classifier)`: Saves model to file.
+- `view_config()`: Shows current configuration.
 
-### 1. Data Preprocessing (fit method)
-```
+## Main Algorithms Flow
+
+### 1. Data Preprocessing
+```bash
 Input: DataFrame X
-1. Filter numeric columns only
-2. Impute missing values using mean strategy
-3. Remove zero-variance features
-4. Store filtered column names for future transforms
+Output: Clean DataFrame
+
+# Clean the data
+Keep only numeric columns
+For each column:
+    Replace infinities with max/min values
+    Fill missing values with column mean
+Remove constant columns (variance = 0)
 ```
 
-### 2. Scaler Selection (_choose_scaler method)
-```
+### 2. Scaler Selection
+```bash
 Input: DataFrame X
-For each feature column:
-    If variance == 0:
-        Mark as "Constant Feature" with MinMaxScaler
-    Else:
-        Sample up to 5000 data points
-        Perform Shapiro-Wilk normality test
-        If p_value > normality_ratio:
-            Mark as "Normal" feature (StandardScaler)
-        Else:
-            Mark as "Non-normal" feature (MinMaxScaler)
+Output: Best scaler for the data
 
-Count normal vs non-normal features
-Return StandardScaler if normal features > non-normal features
-Otherwise return MinMaxScaler
-```
+For each column:
+    Take sample of up to 5000 points
+    Test if data is normal (Shapiro-Wilk test)
+    Count if normal or not normal
 
-### 3. PCA Component Selection (_evaluate_pca method)
-```
-Input: Scaled data matrix X_scaled
-1. Determine maximum possible components:
-   max_components = min(configured_max, n_samples, n_features)
-
-2. Fit PCA with max_components
-3. Calculate cumulative explained variance
-
-For each n from 1 to max_components:
-    If cumulative_variance[n-1] >= variance_threshold:
-        Return {
-            'best_scaler': current_scaler_name,
-            'best_n_components': n,
-            'best_explained_variance': cumulative_variance[n-1]
-        }
-Return None if no solution found
-```
-
-### 4. Data Transformation (transform method)
-```
-Input: DataFrame X
-1. Filter numeric columns
-2. Impute missing values using mean
-3. Select only previously filtered columns
-4. Apply stored scaler
-5. Apply PCA with best_n_components
-Return: Transformed data matrix
-```
-
-### 5. Validation (validate_with_classifier method)
-```
-Input: X, y, classifier (optional), cv (optional), test_size
-Default classifier: LGBMClassifier
-
-If cv is provided:
-    Perform cross-validation on full dataset
-    If PCA reduction successful:
-        Perform cross-validation on reduced dataset
+If more normal columns:
+    Return StandardScaler
 Else:
-    Perform train-test split validation on full dataset
-    If PCA reduction successful:
-        Perform train-test split validation on reduced dataset
+    Return MinMaxScaler
+```
 
-Calculate and display:
-- Accuracy scores
-- Processing times
-- Efficiency gain percentage
+### 3. PCA Optimal Component Selection
+```bash
+Input: Scaled data X
+Output: Optimal number of components
+
+Set max_components = min(50, number of features)
+Try components from 1 to max_components:
+    Calculate explained variance
+    If variance >= threshold (default 95%):
+        Return current number of components
+```
+
+### 4. Main Fitting Process
+```bash
+Input: DataFrame X
+Output: Fitted model
+
+Clean the data
+Choose and fit best scaler
+Scale the data
+Find best number of components
+Save configuratio
+```
+
+### 4. Transform Data
+```bash
+Input: New DataFrame X
+Output: Reduced data
+
+Clean the data using saved settings
+Scale data using saved scaler
+Reduce dimensions using saved components
+Return reduced data
+```
+
+### 5. Validation
+```bash
+Input: Data X, Labels y
+Output: Performance metrics
+
+# Compare original vs reduced data
+Train model on original data
+Train model on reduced data
+Compare:
+    - Accuracy
+    - Speed
+    - Memory usage
+```
+
+### 6. Prediction
+```bash
+Input: New data X
+Output: Predictions
+
+Clean the data
+Apply scaling
+Reduce dimensions
+Make predictions
+Return results and metrics
+```
+
+### 7. Save Model
+```bash
+Input: Model name, Trained model
+Output: Saved file
+
+Collect:
+    - Parameters
+    - Scaler
+    - Components
+    - Column names
+Save everything to file
 ```
 
 ## Key Features
-
-### Error Handling
-- Handles zero-variance features
-- Manages missing values through mean imputation
-- Validates presence of numeric columns
-- Ensures fit before transform
 
 ### Adaptivity Mechanisms
 1. **Scaler Selection**:
@@ -175,22 +218,18 @@ Calculate and display:
    - Compares performance with original data
    - Measures computational efficiency gains
 
+### Error Handling
+- Handles zero-variance features
+- Manages missing values through mean imputation
+- Validates presence of numeric columns
+- Ensures fit before transform
+
 ## Complexity Analysis
 - Time Complexity: O(n * d^2) for PCA computation
 - Space Complexity: O(n * d) for data storage
 Where n = samples, d = features
 
-## Output Information
-- Selected scaler type
-- Optimal number of components
-- Explained variance achieved
-- Performance metrics comparison
-- Processing time measurements
-- Efficiency gains from dimensionality reduction
-
-
 ## Use Cases
-
 ASPIRE is particularly valuable for:
 - Machine learning pipelines requiring automated preprocessing
 - High-dimensional data analysis
@@ -199,7 +238,6 @@ ASPIRE is particularly valuable for:
 - Exploratory data analysis
 
 ## Technical Foundation
-
 The system integrates:
 - Statistical testing for data distribution analysis
 - Adaptive scaling techniques
@@ -217,37 +255,6 @@ AdaptivePCA leverages parallel processing to evaluate scaling and PCA component 
 
 Both AdaptivePCA and traditional PCA achieve similar levels of explained variance, with AdaptivePCA dynamically selecting the number of components based on a defined variance threshold. Traditional PCA, on the other hand, requires manual parameter tuning, which can be time-consuming.
 
-### Effect Size
-
-Using Cohen's d and statistical tests, we observed significant effect sizes in processing time, favoring AdaptivePCA. In practical terms, this means that AdaptivePCA provides substantial improvements in performance while maintaining equivalent or higher levels of accuracy in explained variance coverage.
-
-## Initialization Parameters
-- `variance_threshold`: float, default=0.95  
-  The cumulative variance explained threshold to determine the optimal number of components.
-  
-- `max_components`: int, default=50  
-  The maximum number of components to consider.
-
-- `variance_ratio`: Variance ratio threshold (default: 5.0)
-
-- `normality_ratio`: P-value threshold for Shapiro-Wilk test (default: 0.05)
-
-~~- `scaler_test`: bool, default=True  
-  Added flexibility in scaling, which reduces runtime when scaling isn't required.
-  Added on version 1.0.3~~
-
-- `verbose`: int, default=0  
-  Added parameter verbose to control the level of output:
-   `verbose=1`: Provides detailed output, displaying all component-wise explained variance scores for each scaler.
-   `verbose=0`: Suppresses intermediate output, showing only the final best configuration found after processing all scalers.
-  Useful for debugging or fine-tuning PCA settings, with a default value of 0.
-  Added on version 1.0.6
-
-## Methods
-- `fit(X)`: Fits the AdaptivePCA model to the data `X`.
-- `transform(X)`: Transforms the data `X` using the fitted PCA model.
-- `fit_transform(X)`: Fits and transforms the data in one step.
-
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
@@ -260,4 +267,4 @@ This project makes use of the `scikit-learn`, `numpy`, and `pandas` libraries fo
 ## Version Update Log
 - `1.0.3` - Added flexibility in scaling, fix error handling when max_components exceeding the available number of features or samples.
 - `1.0.6` - Added Parameter verbose as an argument to __init__, with a default value of 0.
-
+- `1.1.0` - Added validation, prediction with classifier, clean up the code.
