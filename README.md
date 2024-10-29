@@ -250,13 +250,15 @@ The system integrates:
 
 ### Speed
 
-AdaptivePCA leverages parallel processing to evaluate scaling and PCA component selection concurrently. In our tests, AdaptivePCA achieved up to a 95% reduction in processing time compared to the traditional PCA method. This is especially useful when working with high-dimensional data, where traditional methods may take significantly longer due to sequential grid search.
+AdaptivePCA adaptively selects the optimal configuration based on data-driven rules, which is less computationally intense than the exhaustive search performed by grid search. In our tests, AdaptivePCA achieved up to a 90% reduction in processing time compared to the traditional PCA method. This is especially useful when working with high-dimensional data, where traditional methods may take significantly longer due to sequential grid search.
 
 ### Explained Variance
 
 Both AdaptivePCA and traditional PCA achieve similar levels of explained variance, with AdaptivePCA dynamically selecting the number of components based on a defined variance threshold. Traditional PCA, on the other hand, requires manual parameter tuning, which can be time-consuming.
 
 ## Performance on Different Dataset (Full & Reduced Dataset)
+
+Most datasets maintain high accuracy, with reduced datasets achieving similar scores to full datasets in nearly all cases. Additionally, the reduced datasets significantly decrease processing time, with time reductions ranging from 1.85% to 58.03%. This indicates that reduced datasets can offer substantial efficiency benefits, especially for larger datasets.
 
 | Dataset | Score (Acc) | Time (s) | Gain (%) |
 |---------|-------------|----------|----------|
