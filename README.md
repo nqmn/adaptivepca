@@ -256,6 +256,26 @@ AdaptivePCA leverages parallel processing to evaluate scaling and PCA component 
 
 Both AdaptivePCA and traditional PCA achieve similar levels of explained variance, with AdaptivePCA dynamically selecting the number of components based on a defined variance threshold. Traditional PCA, on the other hand, requires manual parameter tuning, which can be time-consuming.
 
+### Performance on Different Dataset
+
+| Dataset | Score (Acc) | Time (s) | Gain (%) |
+|---------|-------------|----------|----------|
+|insdn_ddos_binary_01.ds (full)| 1.000000 | 1.5492 | - |
+|insdn_ddos_binary_01.ds (reduced)| 1.000000 | 0.6502 | 58.03 |
+|hldddosdn_hlddos_combine_binary.ds (full)| 1.000000 | 30.3948 | - |
+|hldddosdn_hlddos_combine_binary.ds (reduced)| 1.000000 | 14.4875 | 52.34 |
+|cicddos2019_tcpudp_combine_d1_binary_rus.ds (full) | 1.000000 | 1.6453 | - |
+|cicddos2019_tcpudp_combine_d1_binary_rus.ds (reduced) | 1.000000 | 0.7371 | 55.20 |
+|mendeley_ddos_sdn_binary_19.ds (full) | 1.000000   0.9839 | - |
+|mendeley_ddos_sdn_binary_19.ds (reduced) | 0.942738   0.9355 | 4.93 |
+|Wednesday-workingHours.pcap_ISCX.csv (full) | 0.921126  39.7610 | - |
+|Wednesday-workingHours.pcap_ISCX.csv (reduced) | 0.970010  28.8390 | 27.47 |
+|LR-HR DDoS 2024 Dataset for SDN-Based Networks.csv (full) | 0.999982 | 0.7314 | - |
+|LR-HR DDoS 2024 Dataset for SDN-Based Networks.csv (reduced) | 0.999982 | 0.5131 | 29.84 |
+|dataset_sdn.csv (full) | 1.000000 | 1.0547 | - |
+|dataset_sdn.csv (reduced) | 0.932359 | 1.0352 | 1.85 |
+
+
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
