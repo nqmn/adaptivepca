@@ -226,9 +226,9 @@ Save everything to file
 - Ensures fit before transform
 
 ## Complexity Analysis
-- Time Complexity: O(n * d^2) for PCA computation
-- Space Complexity: O(n * d) for data storage
-Where n = samples, d = features
+- Time Complexity: $O(n * d^2)$ for PCA computation
+- Space Complexity: $O(n * d)$ for data storage
+Where $n$ = samples, $d$ = features
 
 ## Use Cases
 ASPIRE is particularly valuable for:
