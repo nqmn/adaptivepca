@@ -266,9 +266,9 @@ Both AdaptivePCA and traditional PCA achieve similar levels of explained varianc
 |hldddosdn_hlddos_combine_binary.ds (reduced)| 1.000000 | 14.4875 | 52.34 |
 |cicddos2019_tcpudp_combine_d1_binary_rus.ds (full) | 1.000000 | 1.6453 | - |
 |cicddos2019_tcpudp_combine_d1_binary_rus.ds (reduced) | 1.000000 | 0.7371 | 55.20 |
-|mendeley_ddos_sdn_binary_19.ds (full) | 1.000000   0.9839 | - |
-|mendeley_ddos_sdn_binary_19.ds (reduced) | 0.942738   0.9355 | 4.93 |
-|Wednesday-workingHours.pcap_ISCX.csv (full) | 0.921126  39.7610 | - |
+|mendeley_ddos_sdn_binary_19.ds (full) | 1.000000 | 0.9839 | - |
+|mendeley_ddos_sdn_binary_19.ds (reduced) | 0.942738 | 0.9355 | 4.93 |
+|Wednesday-workingHours.pcap_ISCX.csv (full) | 0.921126 | 39.7610 | - |
 |Wednesday-workingHours.pcap_ISCX.csv (reduced) | 0.970010  28.8390 | 27.47 |
 |LR-HR DDoS 2024 Dataset for SDN-Based Networks.csv (full) | 0.999982 | 0.7314 | - |
 |LR-HR DDoS 2024 Dataset for SDN-Based Networks.csv (reduced) | 0.999982 | 0.5131 | 29.84 |
